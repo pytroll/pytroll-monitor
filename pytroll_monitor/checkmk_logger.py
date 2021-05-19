@@ -63,7 +63,6 @@ class CheckMKHandler(logging.Handler):
 
     def emit(self, record):
         """Emit a record."""
-        pass
 
     def get_status_line(self):
         """Get the checkmk status line.
