@@ -20,7 +20,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""Logger to report status to checkmk local checks
+"""Logger to report status to checkmk local checks.
 
 This module contains a logging handler that will gather information based on
 logging messages and report the status to a checkmk local check file.
@@ -39,6 +39,7 @@ class ServiceStatus(IntEnum):
 
     Enumerate the service status according to checkmk local checks.
     """
+
     OK = 0
     WARN = 1
     CRIT = 2
@@ -70,7 +71,8 @@ class CheckMKHandler(logging.Handler):
         Format is defined at
         https://docs.checkmk.com/latest/en/localchecks.html
         """
-        return f"{ServiceStatus.UNKNOWN:d} {self.service_name:s} - Pytroll lives!"
+        return (f"{ServiceStatus.UNKNOWN:d} {self.service_name:s} "
+                "- Pytroll lives!")
 
     def write_status_to_file(self):
         """Update the status in the status file."""
