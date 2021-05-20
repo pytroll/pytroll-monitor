@@ -47,7 +47,14 @@ class ServiceStatus(IntEnum):
 
 
 class CheckMKHandler(logging.Handler):
-    """Handler to report checkmk local check."""
+    """Handler to report checkmk local check.
+
+    This handler abuses logging messages for a status report.  If any message
+    is logged with level WARNING, it will set a checkmk status to WARN.  If any
+    message is logged with a worse level, it will set a checkmk status to
+    CRITICAL.  When trollflow2 reports that all files are produced nominally,
+    it will set status to OK, unless the number is zero.
+    """
 
     service_name = '"Pytroll status report"'
 
@@ -62,7 +69,30 @@ class CheckMKHandler(logging.Handler):
         self.write_status_to_file()
 
     def emit(self, record):
-        """Emit a record."""
+        """Update the status based on the logging.
+
+        Update the state based on the logging.  If a message is logged with
+        level error or worse, set it to critical.  If logged with level
+        warning, set it to warning.  If a message that all non-zero files are
+        produced nominally is emitted, set it to all OK.  Update the status
+        file if the status has changed.  Also update the status if all is still
+        good, so the status does not become too old.
+        """
+        update = False
+        stat = self.status
+        if record.levelno >= logging.ERROR:
+            stat = ServiceStatus.CRIT
+        elif record.levelno >= logging.WARNING:
+            stat = ServiceStatus.WARN
+        elif record.levelno <= logging.INFO:
+            if record.msg.startswith("All 0 files produced nominally"):
+                stat = ServiceStatus.WARN
+            elif "files produced nominally" in record.msg:
+                stat = ServiceStatus.OK
+                update = True
+        if update or stat != self.status:  # status has changed, update file
+            self.status = stat
+            self.write_status_to_file()
 
     def get_status_line(self):
         """Get the checkmk status line.
@@ -70,7 +100,7 @@ class CheckMKHandler(logging.Handler):
         Format is defined at
         https://docs.checkmk.com/latest/en/localchecks.html
         """
-        return (f"{ServiceStatus.UNKNOWN:d} {self.service_name:s} "
+        return (f"{self.status:d} {self.service_name:s} "
                 "- Pytroll lives!")
 
     def write_status_to_file(self):
