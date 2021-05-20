@@ -49,7 +49,7 @@ def test_checkmk_handler(tmp_path):
 
         # log something good
         logger.info("All 100 files produced nominally in 00:00:00")
-        assert ch.get_status_line().startswith("0 ")  # 0 for OK, resets warnings
+        assert ch.get_status_line().startswith("0 ")  # 0 for OK
 
         # check that this is in the file, too
         with f.open(mode="rt", encoding="ascii") as fp:

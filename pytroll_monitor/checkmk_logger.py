@@ -23,10 +23,46 @@
 """Logger to report status to checkmk local checks.
 
 This module contains a logging handler that will gather information based on
-logging messages and report the status to a checkmk local check file.
+logging messages and report the status to a checkmk local check file.  It is
+still a work in progress.  So far it just writes a single line to the indicated
+status_line, and the only thing that changes is the initial digit, where 0 =
+OK, 1 = WARN, 2 = CRIT, and 3 = UNKNOWN.  Status starts at unknown.  When a
+message is logged with level warn, status is set to warn.  When a message is
+logged with level error or critical, status is set to critical.  When the
+message "All n files produced nominally" for n>0 is logged, status is set to
+OK.
 
 For more information on checkmk local checks, see
 https://docs.checkmk.com/latest/en/localchecks.html
+
+An example logging config illustrating how to use this::
+
+    version: 1
+    disable_existing_loggers: false
+    formatters:
+      pytroll:
+        format: '[%(asctime)s %(levelname)-8s %(name)s] %(message)s'
+    handlers:
+      console:
+        class: logging.StreamHandler
+        level: DEBUG
+        formatter: pytroll
+        stream: ext://sys.stdout
+      monitor:
+        (): pytroll_monitor.checkmk_logger.CheckMKHandler
+        level: DEBUG
+        formatter: pytroll
+        status_file: /opt/pytroll/pytroll_inst/pytroll_status
+    root:
+      level: DEBUG
+      handlers:
+        - console
+        - monitor
+
+Pass this to the logging config option for supported pytroll packages,
+such as::
+
+    satpy_launcher.py -n localhost trollflow2.yaml -c logging.yaml
 """
 
 import logging
