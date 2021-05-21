@@ -49,7 +49,7 @@ An example logging config illustrating how to use this::
         formatter: pytroll
         stream: ext://sys.stdout
       monitor:
-        (): pytroll_monitor.checkmk_logger.CheckMKHandler
+        (): pytroll_monitor.checkmk_logger.Trollflow2CheckMKHandler
         level: DEBUG
         formatter: pytroll
         status_file: /opt/pytroll/pytroll_inst/pytroll_status
@@ -82,8 +82,8 @@ class ServiceStatus(IntEnum):
     UNKNOWN = 3
 
 
-class CheckMKHandler(logging.Handler):
-    """Handler to report checkmk local check.
+class Trollflow2CheckMKHandler(logging.Handler):
+    """Handler to report checkmk local for use with trollflow2.
 
     This handler abuses logging messages for a status report.  If any message
     is logged with level WARNING, it will set a checkmk status to WARN.  If any
