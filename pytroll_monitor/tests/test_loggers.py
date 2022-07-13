@@ -5,9 +5,10 @@ import logging
 
 def test_checkmk_handler(tmp_path):
     """Test functionality for checkmk log handler."""
-    from pytroll_monitor.checkmk_logger import Trollflow2CheckMKHandler as CheckMKHandler
+    from pytroll_monitor.checkmk_logger import Trollflow2CheckMKHandler
+    
     f = tmp_path / "bla"
-    ch = CheckMKHandler(os.fspath(f))
+    ch = Trollflow2CheckMKHandler(os.fspath(f))
     logger = logging.getLogger("pytroll.test")
     logger.setLevel(logging.DEBUG)
     ch.setLevel(logging.DEBUG)
