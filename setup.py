@@ -47,4 +47,5 @@ setup(name=NAME,
       data_files=[],
       extras_require={
         "Op5": ["requests"],
+      }
       )
