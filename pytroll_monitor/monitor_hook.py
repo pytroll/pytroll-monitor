@@ -36,7 +36,8 @@ class OP5Monitor(object):
 
     def __init__(self, monitor_service, monitor_server, monitor_host, monitor_auth=None):
         """Init the monitor."""
-        if monitor_auth:
+        self.monitor_auth = monitor_auth
+        if self.monitor_auth:
             self.monitor_auth = tuple(monitor_auth)
         self.monitor_service = monitor_service
         self.monitor_server = monitor_server
