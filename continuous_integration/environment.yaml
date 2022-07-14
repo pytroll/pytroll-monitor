@@ -16,6 +16,8 @@ dependencies:
   - fsspec
   - appdirs
   - setuptools_scm
+  - requests
+  - requests-mock
   - pip
   - pip:
     - trollsift
