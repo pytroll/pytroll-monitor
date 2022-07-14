@@ -6,14 +6,15 @@ import logging
 def test_checkmk_handler(tmp_path):
     """Test functionality for checkmk log handler."""
     from pytroll_monitor.checkmk_logger import Trollflow2CheckMKHandler
+    
     f = tmp_path / "bla"
     ch = Trollflow2CheckMKHandler(os.fspath(f))
     logger = logging.getLogger("pytroll.test")
     logger.setLevel(logging.DEBUG)
     ch.setLevel(logging.DEBUG)
     formatter = logging.Formatter(
-            "{asctime:s} - {name:s} - {levelname:s} - {message:s}",
-            style="{", validate=True)
+        "{asctime:s} - {name:s} - {levelname:s} - {message:s}",
+        style="{", validate=True)
     ch.setFormatter(formatter)
     logger.addHandler(ch)
 
