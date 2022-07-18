@@ -22,94 +22,40 @@
 """A logger sending statuses to monitor."""
 
 import logging
-from six.moves.urllib.parse import urlparse
-import json
-from threading import Thread
 import sys
-from socket import gaierror
 from queue import Queue
+from socket import gaierror
+from threading import Thread
+
+from pytroll_monitor.monitor_hook import OP5Monitor
 
 logger = logging.getLogger(__name__)
-
-
-class RequestOP5Handler(logging.Handler):
-    """Monitoring handler."""
-
-    def __init__(self, auth, service, server, host):
-        """Init the handler."""
-        from pytroll_monitor.monitor_hook import OP5Monitor
-        logging.StreamHandler.__init__(self)
-        self.auth = auth
-        self.service = service
-        self.server = server
-        self.host = host
-        self.monitor = OP5Monitor(auth, service, server, host)
-
-    def emit(self, record):
-        """Emit the message."""
-        if record.levelno < logging.INFO:
-            return
-        if record.levelno >= logging.INFO:
-            status = 0
-        if record.levelno >= logging.WARNING:
-            status = 1
-        if record.levelno >= logging.ERROR:
-            status = 2
-        self.monitor.send_message(status, self.format(record))
 
 
 class OP5Handler(logging.Handler):
     """Monitoring handler."""
 
-    def __init__(self, auth, service, server, host):
+    def __init__(self, service, server, host, auth=None):
         """Init the handler."""
-        logging.Handler.__init__(self)
+        super().__init__()
 
-        self.auth = tuple(auth)
-        self.service = service
-        self.host = host
         self.server = server
+        self.monitor = OP5Monitor(service, server, host, auth)
 
     def emit(self, record):
         """Emit a record."""
-        if record.levelno < logging.INFO:
-            return
-        if record.levelno >= logging.INFO:
-            status = 0
-        if record.levelno >= logging.WARNING:
-            status = 1
         if record.levelno >= logging.ERROR:
             status = 2
-        jsondata = json.dumps({"host_name": self.host,
-                               "service_description": self.service,
-                               "status_code": status,
-                               "plugin_output": self.format(record)})
-
+        elif record.levelno >= logging.WARNING:
+            status = 1
+        elif record.levelno >= logging.INFO:
+            status = 0
+        else:
+            return
         try:
-            import http.client
-            url = urlparse(self.server)
-            if url.scheme == 'https':
-                h = http.client.HTTPSConnection(url.netloc)
-            elif url.scheme == "http":
-                h = http.client.HTTPConnection(url.netloc)
-            else:
-                raise NotImplementedError(
-                    "Can't create an OP5 logger with scheme {}".format(
-                        url.scheme))
-            h.putrequest('POST', url.path)
-            h.putheader("Content-type",
-                        "application/json")
-            h.putheader("Content-length", str(len(jsondata)))
-            if self.auth:
-                import base64
-                s = ('%s:%s' % self.auth).encode('utf-8')
-                s = 'Basic ' + base64.b64encode(s).strip().decode('ascii')
-                h.putheader('Authorization', s)
-            h.endheaders()
-            h.send(jsondata.encode('utf-8'))
-            h.getresponse()  # nothing to do with the result
+            self.monitor.send_message(status, self.format(record))
         except gaierror:
-            sys.stderr.write("Can't reach %s !\n" % url.netloc)
+            sys.stderr.write("Can't reach %s !\n" % self.server)
             self.handleError(record)
         except Exception:
             self.handleError(record)

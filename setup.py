@@ -45,4 +45,7 @@ setup(name=NAME,
       zip_safe=False,
       scripts=[],
       data_files=[],
+      extras_require={
+        "Op5": ["requests"],
+      }
       )

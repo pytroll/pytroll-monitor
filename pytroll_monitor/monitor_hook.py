@@ -30,19 +30,15 @@ from six.moves.urllib.parse import urljoin
 
 LOG = logging.getLogger(__name__)
 
-MODE = os.getenv("SMHI_MODE")
-if MODE is None:
-    MODE = "offline"
-
 
 class OP5Monitor(object):
-    """A class to trigger the sending of a notifcation to the SMHI monitor server."""
+    """A class to trigger the sending of a notification to an Op5 monitor server."""
 
-    def __init__(self, monitor_auth, monitor_service, monitor_server, monitor_host):
+    def __init__(self, monitor_service, monitor_server, monitor_host, monitor_auth=None):
         """Init the monitor."""
-        # __init__ is not run when created from yaml
-        # See http://pyyaml.org/ticket/48
         self.monitor_auth = monitor_auth
+        if self.monitor_auth:
+            self.monitor_auth = tuple(monitor_auth)
         self.monitor_service = monitor_service
         self.monitor_server = monitor_server
         self.monitor_host = monitor_host
@@ -57,7 +53,9 @@ class OP5Monitor(object):
 
     def __setstate__(self, mydict):
         """Set state."""
-        self.monitor_auth = mydict['monitor_auth']
+        monitor_auth = mydict.get('monitor_auth')
+        if monitor_auth:
+            self.monitor_auth = tuple(monitor_auth)
         self.monitor_service = mydict['monitor_service']
         self.monitor_server = mydict['monitor_server']
         self.monitor_host = mydict['monitor_host']
@@ -74,18 +72,12 @@ class OP5Monitor(object):
 
     def send_message(self, status, msg):
         """Send the message to the monitor server."""
-        api_command = urljoin(self.monitor_server, '/api/command/PROCESS_SERVICE_CHECK_RESULT')
-        # LOG.debug("API command: <%s>", api_command)
-        # LOG.debug("monitor host: %s", self.monitor_host)
-        # LOG.debug("monitor service: %s", self.monitor_service)
-        # LOG.debug("status code: %d", status)
-        # LOG.debug("Message: %s", msg)
-        jsondata = json.dumps({"host_name": self.monitor_host,
-                               "service_description": self.monitor_service,
-                               "status_code": status,
-                               "plugin_output": msg})
-        retv = requests.post(api_command,
-                             headers={'content-type': 'application/json'},
-                             auth=tuple(self.monitor_auth),
-                             data=jsondata)
-        return retv
+        json_data = {"host_name": self.monitor_host,
+                     "service_description": self.monitor_service,
+                     "status_code": status,
+                     "plugin_output": msg}
+        with requests.post(self.monitor_server,
+                           auth=self.monitor_auth,
+                           json=json_data) as response:
+            response.raise_for_status()
+            return response
