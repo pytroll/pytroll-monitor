@@ -51,7 +51,7 @@ class TestOp5Interfaces:
         op5m = OP5Monitor(self.service, self.server, self.host, monitor_auth=None)
 
         with requests_mock.Mocker() as m:
-            m.post(self.server, text=self.response_text)
+            m.get(self.server, text=self.response_text)
             op5m.send_message(self.status, self.message)
             assert m.last_request.json() == self.expected_json
             assert m.last_request.url == self.server
@@ -63,7 +63,7 @@ class TestOp5Interfaces:
         op5m = OP5Monitor(self.service, self.server, self.host, self.auth)
 
         with requests_mock.Mocker() as m:
-            m.post(self.server, text=self.response_text)
+            m.get(self.server, text=self.response_text)
             op5m.send_message(self.status, self.message)
             assert m.last_request.headers["Authorization"] == self.expected_auth
 
@@ -74,7 +74,7 @@ class TestOp5Interfaces:
         logging.config.dictConfig(log_dict)
 
         with requests_mock.Mocker() as m:
-            m.post(self.server, text=self.response_text)
+            m.get(self.server, text=self.response_text)
             logger.warning(self.message)
             assert m.last_request.json() == self.expected_json
             assert m.last_request.headers["Authorization"] == self.expected_auth
