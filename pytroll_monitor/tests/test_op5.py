@@ -1,13 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from pytroll_monitor.monitor_hook import OP5Monitor
-from pytroll_monitor.op5_logger import OP5Handler
-import yaml
 import logging
 import logging.config
-import requests_mock
 
+import requests_mock
+import yaml
+
+from pytroll_monitor.monitor_hook import OP5Monitor
+from pytroll_monitor.op5_logger import OP5Handler  # noqa
 
 yaml_config = """version: 1
 disable_existing_loggers: false
@@ -54,7 +55,7 @@ class TestOp5Interfaces:
             op5m.send_message(self.status, self.message)
             assert m.last_request.json() == self.expected_json
             assert m.last_request.url == self.server
-            assert m.last_request.method == "POST"
+            assert m.last_request.method == "GET"
             assert "Authorization" not in m.last_request.headers
 
     def test_op5monitor_with_auth(self):
