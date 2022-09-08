@@ -76,7 +76,7 @@ class OP5Monitor(object):
                      "service_description": self.monitor_service,
                      "status_code": status,
                      "plugin_output": msg}
-        with requests.get(self.monitor_server,
+        with requests.post(self.monitor_server,
                           auth=self.monitor_auth,
                           json=json_data) as response:
             response.raise_for_status()
