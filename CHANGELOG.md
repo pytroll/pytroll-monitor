@@ -1,3 +1,20 @@
+## Version 0.3.0 (2023/04/26)
+
+
+### Pull Requests Merged
+
+#### Bugs fixed
+
+* [PR 9](https://github.com/pytroll/pytroll-monitor/pull/9) - Fix op5, needed post in the end
+* [PR 8](https://github.com/pytroll/pytroll-monitor/pull/8) - Fix op5 to use GET, not POST
+
+#### Features added
+
+* [PR 10](https://github.com/pytroll/pytroll-monitor/pull/10) - Remove six
+
+In this release 3 pull requests were closed.
+
+
 ## Version v0.2.0 (2022/07/18)
 
 ### Issues Closed
