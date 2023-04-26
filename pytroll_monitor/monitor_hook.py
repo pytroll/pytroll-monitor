@@ -26,7 +26,7 @@ import os
 import logging
 import requests
 import json
-from six.moves.urllib.parse import urljoin
+from urllib.parse import urljoin
 
 LOG = logging.getLogger(__name__)
 
