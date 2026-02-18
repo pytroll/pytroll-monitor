@@ -23,7 +23,7 @@ jobs:
           pip install -U pytest pytest-cov pyyaml posttroll requests requests-mock trollsift posttroll
       - name: Run tests
         run: |
-          pytest --cov=pytroll_runner pytroll_monitor/tests --cov-report=xml
+          pytest --cov=pytroll_monitor pytroll_monitor/tests --cov-report=xml
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v5
         with:
