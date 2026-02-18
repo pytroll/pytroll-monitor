@@ -1,0 +1,27 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "pytroll-monitor"
+dynamic = ["version"]
+description = "Monitoring tools for pytroll production runners"
+readme = "README.md"
+license = ""
+authors = [
+    { name = "Martin Raspaud", email = "martin.raspaud@smhi.se" },
+    { name = "Adam Dybbroe" },
+]
+
+[project.optional-dependencies]
+Op5 = [
+    "requests",
+]
+
+[tool.hatch.version]
+path = "pytroll_monitor/__init__.py"
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/pytroll_monitor",
+]
