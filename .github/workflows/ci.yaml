@@ -10,7 +10,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        python-version: ["3.11", "3.12", "3.13"]
+        python-version: ["3.12", "3.13", "3.14"]
     steps:
       - name: Checkout source
         uses: actions/checkout@v5
@@ -23,7 +23,7 @@ jobs:
           pip install -U pytest pytest-cov pyyaml posttroll requests requests-mock trollsift posttroll
       - name: Run tests
         run: |
-          pytest --cov=pytroll_runner pytroll_runner/tests --cov-report=xml
+          pytest --cov=pytroll_runner pytroll_monitor/tests --cov-report=xml
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v5
         with:
