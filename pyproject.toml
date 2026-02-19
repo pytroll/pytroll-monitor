@@ -20,16 +20,14 @@ authors = [
     { name = "Martin Raspaud", email = "martin.raspaud@smhi.se" },
     { name = "Adam Dybbroe" },
 ]
-dependencies = [
-    "pyyaml[op5]>=6.0.3",
-    "requests-mock[test]>=1.12.1",
-]
 
 [project.optional-dependencies]
 Op5 = [
     "requests",
+    "pyyaml>=6.0.3",
 ]
 
 test = [
     "pytest>=8.3.5",
+    "requests-mock>=1.12.1",
 ]
