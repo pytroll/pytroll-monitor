@@ -1,6 +1,12 @@
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling", "hatch-vcs"]
 build-backend = "hatchling.build"
+
+[tool.hatch.version]
+source = "vcs"
+
+[tool.hatch.build.hooks.vcs]
+version-file = "pytroll_monitor/version.py"
 
 [project]
 name = "pytroll-monitor"
@@ -18,10 +24,3 @@ Op5 = [
     "requests",
 ]
 
-[tool.hatch.version]
-path = "pytroll_monitor/__init__.py"
-
-[tool.hatch.build.targets.sdist]
-include = [
-    "/pytroll_monitor",
-]
