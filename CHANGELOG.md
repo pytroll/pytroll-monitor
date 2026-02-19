@@ -1,3 +1,15 @@
+## Version 0.5.0 (2026/02/19)
+
+
+### Pull Requests Merged
+
+#### Features added
+
+* [PR 13](https://github.com/pytroll/pytroll-monitor/pull/13) - Porting to pyproject.toml
+
+In this release 1 pull request was closed.
+
+
 ## Version 0.4.0 (2026/02/18)
 
 
