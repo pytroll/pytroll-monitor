@@ -13,7 +13,7 @@ name = "pytroll-monitor"
 dynamic = ["version"]
 description = "Monitoring tools for pytroll production runners"
 readme = "README.md"
-license = "GPLv3+"
+license = "GPL-3.0-or-later"
 license-files = ["LICENSE"]
 authors = [
     { name = "Martin Raspaud", email = "martin.raspaud@smhi.se" },
