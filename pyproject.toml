@@ -15,9 +15,14 @@ description = "Monitoring tools for pytroll production runners"
 readme = "README.md"
 license = "GPL-3.0-or-later"
 license-files = ["LICENSE"]
+requires-python = ">=3.12"
 authors = [
     { name = "Martin Raspaud", email = "martin.raspaud@smhi.se" },
     { name = "Adam Dybbroe" },
+]
+dependencies = [
+    "pyyaml[op5]>=6.0.3",
+    "requests-mock[test]>=1.12.1",
 ]
 
 [project.optional-dependencies]
@@ -25,3 +30,6 @@ Op5 = [
     "requests",
 ]
 
+test = [
+    "pytest>=8.3.5",
+]
