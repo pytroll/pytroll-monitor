@@ -30,7 +30,7 @@ root:
 
 class TestOp5Interfaces:
     """Test the Op5 monitor and handler."""
-    def setup(self):
+    def setup_method(self):
         self.service = "that_service_we_should_monitor"
         self.server = "http://myop5server.com/some/service"
         self.auth = ("username", "password")
